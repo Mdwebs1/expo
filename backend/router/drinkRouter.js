@@ -15,12 +15,10 @@ router.get("/drinks", (req, res) => {
 
 //post for Drink
 router.post("/drinks",async (req, res) => {
-    const {name,price,drinkImage} = req.body;
+    const {name,price,image} = req.body;
     try{
       
-      const drinkUser= await Drink.create({name,price,drinkImage})
-    //   const token =createToken(hostUser._id,hostUser.email,hostUser.name,hostUser.userName,hostUser)
-    //   res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+      const drinkUser= await Drink.create({name,price,image})
        res.status(201).json({drinkUser})
     }
     catch(err){
@@ -30,15 +28,33 @@ router.post("/drinks",async (req, res) => {
    
 });
 
+router.get("/orders/:id", (req, res)=>{
+    Drink.find({_id:req.params.id}).then((order) => {
+
+        res.send(order)
+    })
+})
+
+//POST FOR CHOSE ORDER
+router.post("/orders", (req, res) => {
+   
+    Drink.find({_id:req.body.id}).then((order) => {
+
+        res.send(order)
+    })
+
+})
+
+
 router.patch("/updateDrinks/:id",async (req, res) =>{
-    const allowedUpdates = ["name","price","drinkImage"];
+    const allowedUpdates = ["name","price","image"];
     const updates = Object.keys(req.body)
     const isValidOperation = updates.every((update)=> allowedUpdates.includes(update))
     if(!isValidOperation) {
         return res.status(400).send( 'Invalid updates');
     }else{
         try{
-            const drink = await Drink.findByIdAndUpdate({_id: req.params.id},{name:req.body.name,price:req.body.price,drinkImage:req.body.drinkImage})
+            const drink = await Drink.findByIdAndUpdate({_id: req.params.id},{name:req.body.name,price:req.body.price,image:req.body.image})
                   
             await drink.save()
                     Drink.find({}).then((allDrinks)=>{

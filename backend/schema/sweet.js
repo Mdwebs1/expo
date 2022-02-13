@@ -11,7 +11,7 @@ const sweetSchema = new Schema({
     price:{
         type: Number,
     },
-    sweetImage:{
+    image:{
         type:String
      }
 

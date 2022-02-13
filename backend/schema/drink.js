@@ -11,7 +11,7 @@ const drinkSchema = new Schema({
     price:{
         type: Number,
     },
-    drinkImage:{
+    image:{
         type:String
      }
 

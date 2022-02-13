@@ -13,14 +13,31 @@ router.get("/sweets", (req, res) => {
        });
 });
 
+
+
+router.get("/orders/:id", (req, res)=>{
+    Sweet.find({_id:req.params.id}).then((order) => {
+
+        res.send(order)
+    })
+})
+
+//POST FOR CHOSE ORDER
+router.post("/orders", (req, res) => {
+   
+    Sweet.find({_id:req.body.id}).then((order) => {
+
+        res.send(order)
+    })
+
+})
+
 //post for Sweet
 router.post("/sweets",async (req, res) => {
-    const {name,price,sweetImage} = req.body;
+    const {name,price,image} = req.body;
     try{
       
-      const sweetUser= await Sweet.create({name,price,sweetImage})
-    //   const token =createToken(hostUser._id,hostUser.email,hostUser.name,hostUser.userName,hostUser)
-    //   res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+      const sweetUser= await Sweet.create({name,price,image})
        res.status(201).json({sweetUser})
     }
     catch(err){
@@ -31,14 +48,14 @@ router.post("/sweets",async (req, res) => {
 });
 
 router.patch("/updateSweets/:id",async (req, res) =>{
-    const allowedUpdates = ["name","price","sweetUser"];
+    const allowedUpdates = ["name","price","image"];
     const updates = Object.keys(req.body)
     const isValidOperation = updates.every((update)=> allowedUpdates.includes(update))
     if(!isValidOperation) {
         return res.status(400).send( 'Invalid updates');
     }else{
         try{
-            const sweet = await Drink.findByIdAndUpdate({_id: req.params.id},{name:req.body.name,price:req.body.price,sweetImage:req.body.sweetImage})
+            const sweet = await Drink.findByIdAndUpdate({_id: req.params.id},{name:req.body.name,price:req.body.price,image:req.body.image})
                   
             await sweet.save()
                     Sweet.find({}).then((allSweets)=>{
